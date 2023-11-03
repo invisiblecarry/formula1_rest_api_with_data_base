@@ -1,12 +1,10 @@
-from peewee import SqliteDatabase, Model, IntegerField, TextField, DateTimeField, ForeignKeyField, CharField
-from datetime import datetime
-
-db = SqliteDatabase('formula1_report.db')
+from peewee import Model, IntegerField, DateTimeField, ForeignKeyField, CharField, DatabaseProxy, SqliteDatabase
+database_proxy = DatabaseProxy()
 
 
 class BaseModel(Model):
     class Meta:
-        database = db
+        database = database_proxy
 
 
 class Racers(BaseModel):
@@ -17,7 +15,8 @@ class Racers(BaseModel):
 
 
 class RaceResults(BaseModel):
-    racer_id = ForeignKeyField(Racers,  backref='race_times')
+    racer_id = ForeignKeyField(Racers, backref='race_times')
     start_time = DateTimeField()
     end_time = DateTimeField()
     best_lap_time = DateTimeField()
+

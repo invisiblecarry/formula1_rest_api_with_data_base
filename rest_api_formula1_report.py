@@ -5,11 +5,10 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 from flasgger import Swagger
 from formula1.report import parse_log_files, load_abbreviations, build_report
-from database.core import crud
-from database import core
+
 
 app = Flask(__name__)
-app.config['DATA_FOLDER'] = os.path.join('', 'data')
+app.config['DATA_FOLDER'] = os.path.abspath(os.path.join('', 'data'))
 api = Api(app)
 swagger = Swagger(app)
 
@@ -25,19 +24,6 @@ def get_report():
 class ReportResource(Resource):
 
     def get(self, version):
-        """
-        This is the GET endpoint for the report.
-        ---
-        parameters:
-          - name: format
-            in: query
-            type: string
-            description: The format of the report (json or xml)
-            required: true
-        responses:
-          200:
-            description: Successful response
-        """
         report = get_report()
         data_format = request.args.get('format', 'json')
         if data_format == 'json':
