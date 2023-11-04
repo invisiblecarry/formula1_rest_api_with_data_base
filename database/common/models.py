@@ -1,4 +1,11 @@
-from peewee import Model, IntegerField, DateTimeField, ForeignKeyField, CharField, DatabaseProxy, SqliteDatabase
+from peewee import (Model,
+                    IntegerField,
+                    DateTimeField,
+                    ForeignKeyField,
+                    CharField,
+                    DatabaseProxy,
+                    SqliteDatabase)
+
 database_proxy = DatabaseProxy()
 
 
@@ -19,4 +26,3 @@ class RaceResults(BaseModel):
     start_time = DateTimeField()
     end_time = DateTimeField()
     best_lap_time = DateTimeField()
-
