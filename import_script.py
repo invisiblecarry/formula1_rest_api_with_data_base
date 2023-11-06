@@ -31,32 +31,31 @@ def import_data_from_files(db: SqliteDatabase, path: str) -> None:
         Note: `Racers` and `RaceResults` are pre-defined ORM models.
     """
     report = get_report(path)
-    if report:
-        database_proxy.initialize(database)
-        database_proxy.connect()
-        database_proxy.create_tables([Racers, RaceResults])
-        with db.atomic():
-            for driver in report.values():
-                existing_racer = Racers.select().where(Racers.abbreviation == driver['abbreviation']).first()
-                if not existing_racer:
-                    racer = Racers.create(abbreviation=driver['abbreviation'],
-                                          driver_name=driver['driver_name'],
-                                          team=driver['team'])
-                else:
-                    racer = existing_racer
-                if racer:
-                    existing_race_result = RaceResults.select().where(RaceResults.racer_id == racer.id).first()
-                    if not existing_race_result:
-                        race_result = RaceResults.create(racer_id=racer.id,
-                                                         start_time=driver['start_time'],
-                                                         end_time=driver['end_time'],
-                                                         best_lap_time=driver['best_lap_time'])
-        database_proxy.close()
-    else:
+    if not report:
         raise TypeError('Can`t get the report')
+    database_proxy.initialize(database)
+    database_proxy.connect()
+    database_proxy.create_tables([Racers, RaceResults])
+    with db.atomic():
+        for driver in report.values():
+            existing_racer = Racers.select().where(Racers.abbreviation == driver['abbreviation']).first()
+            if not existing_racer:
+                racer = Racers.create(abbreviation=driver['abbreviation'],
+                                      driver_name=driver['driver_name'],
+                                      team=driver['team'])
+            else:
+                racer = existing_racer
+
+            existing_race_result = RaceResults.select().where(RaceResults.racer_id == racer.id).first()
+            if not existing_race_result:
+                race_result = RaceResults.create(racer_id=racer.id,
+                                                 start_time=driver['start_time'],
+                                                 end_time=driver['end_time'],
+                                                 best_lap_time=driver['best_lap_time'])
+    database_proxy.close()
 
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    database = SqliteDatabase(os.path.join(args.db_path, 'formula1_report.db'))
+    database = SqliteDatabase(os.path.join(args.db_path))
     import_data_from_files(db=database, path=args.data_folder)
