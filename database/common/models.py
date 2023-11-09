@@ -4,7 +4,8 @@ from peewee import (Model,
                     ForeignKeyField,
                     CharField,
                     DatabaseProxy,
-                    SqliteDatabase)
+                    SqliteDatabase,
+                    TimeField)
 
 database_proxy = DatabaseProxy()
 
@@ -25,4 +26,4 @@ class RaceResults(BaseModel):
     racer_id = ForeignKeyField(Racers, backref='race_times')
     start_time = DateTimeField()
     end_time = DateTimeField()
-    best_lap_time = DateTimeField()
+    best_lap_time = TimeField()
