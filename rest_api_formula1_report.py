@@ -14,9 +14,11 @@ api = Api(app)
 swagger = Swagger(app)
 
 
-def convert_data_to_iso8601(data: list) -> list:
+def convert_data_to_str(data: list) -> list:
     for item in data:
-        print(item['start_time'], type(item['start_time']))
+        item['start_time'] = str(item['start_time'])
+        item['end_time'] = str(item['end_time'])
+        item['best_lap_time'] = str(item['best_lap_time'])
 
     return data
 
@@ -39,7 +41,7 @@ def get_data_from_database():
                          RaceResults.best_lap_time)
                  .join(RaceResults, on=(Racers.id == RaceResults.racer_id))
                  .dicts())
-        result = convert_data_to_iso8601(list(query))
+        result = convert_data_to_str(list(query))
         print(result)
         return result
 
@@ -47,8 +49,6 @@ def get_data_from_database():
         print(ex)
         return None
 
-
-# ---------------------- ALL CODE UNDER THIS COMMENT HAS NOT BEEN CHANGED YET ---------------------------
 
 class ReportResource(Resource):
 
