@@ -9,38 +9,6 @@ parser.add_argument('--db-path', type=str, help='Path to the database.', require
 parser.add_argument('--data-folder', type=str, help='Path to the folder with files.', required=True)
 
 
-# def convert_to_time(time_string) -> datetime.time:
-#     """
-#     Convert a time string to a time object.
-#
-#     :args: time_string (str): The string representing time.
-#
-#     :return: datetime.time: A time object representing time.
-#
-#     """
-#     hours, minutes, seconds, milliseconds = [int(part) for part in time_string.replace('.', ':').split(':')]
-#     time_value = datetime.time(hour=hours, minute=minutes, second=seconds, microsecond=int(milliseconds) * 1000)
-#     return time_value
-#
-#
-# def convert_to_date_time(date_string: str) -> datetime:
-#     """
-#     Convert a date and time string to a datetime object.
-#
-#     :args: date_string (str): The string representing the date and time in the format "%Y-%m-%d %H:%M:%S.%f".
-#
-#     :return: datetime: A datetime object representing the date and time.
-#
-#     """
-#     try:
-#         date_format = "%Y-%m-%d %H:%M:%S.%f"
-#         datetime_obj = datetime.datetime.strptime(date_string, date_format)
-#     except ValueError:
-#         date_format = '%Y-%m-%d %H:%M:%S'
-#         datetime_obj = datetime.datetime.strptime(date_string, date_format)
-#     return datetime_obj
-
-
 def get_report(path_to_data_folder) -> dict:
     start_data = parse_log_files(path_to_data_folder, 'start.log')
     end_data = parse_log_files(path_to_data_folder, "end.log")
