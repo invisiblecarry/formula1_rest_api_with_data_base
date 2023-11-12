@@ -114,12 +114,12 @@ class ReportResource(Resource):
             root = ET.Element("report")
             for driver_info in data:
                 driver = ET.SubElement(root, "driver")
-                ET.SubElement(driver, "DriverName").text = driver_info['driver_name']
-                ET.SubElement(driver, "Team").text = driver_info['team']
-                ET.SubElement(driver, "StartTime").text = driver_info['start_time']
-                ET.SubElement(driver, "EndTime").text = driver_info['end_time']
-                ET.SubElement(driver, "BestLapTime").text = driver_info['best_lap_time']
-                ET.SubElement(driver, "Abbreviation").text = driver_info['abbreviation']
+                ET.SubElement(driver, "driver_name").text = driver_info['driver_name']
+                ET.SubElement(driver, "team").text = driver_info['team']
+                ET.SubElement(driver, "start_time").text = driver_info['start_time']
+                ET.SubElement(driver, "end_time").text = driver_info['end_time']
+                ET.SubElement(driver, "best_lap_time").text = driver_info['best_lap_time']
+                ET.SubElement(driver, "abbreviation").text = driver_info['abbreviation']
             xml_response = ET.tostring(root, encoding="utf-8").decode('utf-8')
             return xml_response, 200
         else:
