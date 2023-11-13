@@ -23,7 +23,8 @@ def create_app(test_config=None):
         SECRET_KEY='dev',
         TESTING=False,
         DEBUG=True,
-        DATABASE=SqliteDatabase(os.path.abspath(os.path.join('database', 'formula1_report.db')))
+        DATABASE=SqliteDatabase(os.path.abspath(os.path.join('database', 'formula1_report.db'))),
+        PATH_TO_DATA=os.path.abspath(os.path.join('.', 'data'))
 
     )
 
