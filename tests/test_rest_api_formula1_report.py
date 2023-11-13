@@ -9,7 +9,8 @@ test_config = {
     "SECRET_KEY": 'dev',
     "TESTING": True,
     "DEBUG": False,
-    "PATH_TO_DATA": os.path.abspath(os.path.join('..', 'data'))
+    "PATH_TO_DATA": os.path.abspath(os.path.join('..', 'data')),
+    "DATABASE": SqliteDatabase(':memory:')
 }
 
 

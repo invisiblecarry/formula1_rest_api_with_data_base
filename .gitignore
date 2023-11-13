@@ -58,9 +58,11 @@ cover/
 
 # Django stuff:
 local_settings.py
+
 # Flask stuff:
 instance/
 .webassets-cache
+*.db
 
 # Scrapy stuff:
 .scrapy

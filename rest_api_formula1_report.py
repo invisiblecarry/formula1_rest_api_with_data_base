@@ -6,6 +6,7 @@ from flask import Flask, request
 from flask_restful import Api, Resource
 from flasgger import Swagger
 from database.common.models import *
+from import_script import import_data_from_files
 import datetime
 
 
@@ -21,7 +22,8 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev',
         TESTING=False,
-        DEBUG=True
+        DEBUG=True,
+        DATABASE=SqliteDatabase(os.path.abspath(os.path.join('database', 'formula1_report.db')))
 
     )
 
@@ -34,17 +36,7 @@ def create_app(test_config=None):
         if e.errno != errno.EEXIST:
             raise
 
-    if app.config['TESTING']:
-        database = SqliteDatabase(':memory:')
-    else:
-        database = SqliteDatabase(os.path.abspath(os.path.join('database', 'formula1_report.db')))
-    database_proxy.initialize(database)
-
-    with app.app_context():
-        database_proxy.connect()
-        database_proxy.create_tables([Racers, RaceResults], safe=True)
-        database_proxy.close()
-
+    import_data_from_files(db=app.config['DATABASE'], path=app.config['PATH_TO_DATA'])
     api = Api(app)
     swagger = Swagger(app)
     api.add_resource(ReportResource, '/api/<string:version>/report/')
@@ -105,7 +97,7 @@ class ReportResource(Resource):
         """
         data = get_data_from_database()
         if not data:
-            raise TypeError('Can`t get data from database')
+            raise TypeError('The database is empty')
         data_format = request.args.get('format', 'json')
         if data_format == 'json':
             response_data = json.dumps(data)

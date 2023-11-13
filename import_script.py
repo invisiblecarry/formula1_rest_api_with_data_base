@@ -28,16 +28,17 @@ def import_data_from_files(db: SqliteDatabase, path: str) -> None:
         This function initializes database connection, creates tables, and populates them with
         data parsed by `get_report` from the provided directory. It checks for existing entries
         of racers and race results to avoid duplicates before creating new records.
+        If database is temporary than connection should be closed after using this func
 
         Note: `Racers` and `RaceResults` are pre-defined ORM models.
     """
     report = get_report(path)
     if not report:
         raise TypeError('Can`t get the report')
-    database_proxy.initialize(database)
+    database_proxy.initialize(db)
     database_proxy.connect()
-    database_proxy.create_tables([Racers, RaceResults])
-    with db.atomic():
+    database_proxy.create_tables([Racers, RaceResults], safe=True)
+    with database_proxy.atomic():
         for driver in report.values():
             existing_racer = Racers.select().where(Racers.abbreviation == driver['abbreviation']).first()
             if not existing_racer:
@@ -53,7 +54,8 @@ def import_data_from_files(db: SqliteDatabase, path: str) -> None:
                                                  start_time=driver['start_time'],
                                                  end_time=driver['end_time'],
                                                  best_lap_time=driver['best_lap_time'])
-    database_proxy.close()
+    if database_proxy.database != ':memory:':
+        database_proxy.close()
 
 
 if __name__ == "__main__":
