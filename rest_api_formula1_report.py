@@ -7,29 +7,24 @@ from flask_restful import Api, Resource
 from flasgger import Swagger
 from database.common.models import *
 from import_script import import_data_from_files
-import datetime
+
+config = {"SECRET_KEY": 'dev',
+          "TESTING": False,
+          "DEBUG": True,
+          "DATABASE": SqliteDatabase(os.path.abspath(os.path.join('database', 'formula1_report.db'))),
+          "PATH_TO_DATA": os.path.abspath(os.path.join('.', 'data'))
+          }
 
 
-def create_app(test_config=None):
+def create_app(cfg: dict) -> Flask:
     """
     Creates and configures an instance of a Flask application.
 
-    :param test_config: A dictionary of configuration parameters for testing.
+    :param cfg: A dictionary of configuration parameters.
     :return: A Flask application object.
     """
     app = Flask(__name__)
-
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        TESTING=False,
-        DEBUG=True,
-        DATABASE=SqliteDatabase(os.path.abspath(os.path.join('database', 'formula1_report.db'))),
-        PATH_TO_DATA=os.path.abspath(os.path.join('.', 'data'))
-
-    )
-
-    if test_config is not None:
-        app.config.from_mapping(test_config)
+    app.config.from_mapping(cfg)
 
     try:
         os.makedirs(app.instance_path)
@@ -120,5 +115,5 @@ class ReportResource(Resource):
 
 
 if __name__ == '__main__':
-    flask_app = create_app()
+    flask_app = create_app(config)
     flask_app.run(debug=True)

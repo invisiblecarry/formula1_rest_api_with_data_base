@@ -25,7 +25,7 @@ class TestYourFlaskApp(unittest.TestCase):
         Set up the Flask application for testing. It configures the app for
         testing and initializes the test client.
         """
-        self.app = create_app(test_config=test_config)
+        self.app = create_app(cfg=test_config)
         self.client = self.app.test_client()
 
     def test_get_report_json(self):
