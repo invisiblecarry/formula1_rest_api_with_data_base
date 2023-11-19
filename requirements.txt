@@ -1,3 +1,4 @@
 peewee~=3.17.0
 flask~=3.0.0
+https://test.pypi.org/project/formula1-report-b-v/
 flasgger~=0.9.7.1
